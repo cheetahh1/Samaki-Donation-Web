@@ -1,11 +1,13 @@
 "use client"
 
-import { Home, MoreHorizontal, ChevronLeft, ChevronRight, Trash2, Eye, Link } from "lucide-react"
+import { Home, MoreHorizontal, ChevronLeft, ChevronRight, Trash2, Eye } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useState } from "react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Approve } from "@/components/ui/approve"
@@ -14,9 +16,9 @@ import { Rejected } from "@/components/ui/rejected"
 export default function Dashboard() {
   const router = useRouter()
 
-  const handleNavigateToHome = () => {
-    router.push("/home") // Navigates to homepage (page.tsx)
-  }
+  // const handleNavigateToHome = () => {
+  //   router.push("/") // Navigates to homepage (page.tsx)
+  // }
 
   const handleViewCampaign = (campaignId: number) => {
     router.push(`/donation?campaignId=${campaignId}`)
@@ -41,7 +43,7 @@ export default function Dashboard() {
   const approvalCampaigns = [
     {
       id: 1,
-      image: "admin1.png",
+      image: "/admin1.png",
       location: "Kampong Cham",
       author: "Cheata In Em",
       timeAgo: "2 hours ago",
@@ -52,7 +54,7 @@ export default function Dashboard() {
     },
     {
       id: 2,
-      image: "admin2.png",
+      image: "/admin2.png",
       location: "Kampot",
       author: "Sarah kim",
       timeAgo: "4 hours ago",
@@ -125,7 +127,7 @@ export default function Dashboard() {
     },
     {
       id: 5,
-      image: "meals3.png",
+      image: "/meals3.png",
       location: "Kampong Speu",
       author: "Kaknika Dorn",
       timeAgo: "4 days ago",
@@ -137,7 +139,7 @@ export default function Dashboard() {
     },
     {
       id: 6,
-      image: "meal2.png",
+      image: "/meal2.png",
       location: "Kampong Chnang",
       author: "Eveheang Sok",
       timeAgo: "15 days ago",
@@ -151,7 +153,11 @@ export default function Dashboard() {
 
   const handleDeleteCampaign = (campaignId: number) => {
     // setCampaigns((prev) => prev.filter((campaign) => campaign.id !== campaignId))
+    // Use parameter to satisfy linter until implemented
+    console.debug("delete campaign", campaignId)
   }
+
+  const getImagePath = (path: string) => (path?.startsWith("/") ? path : `/${path}`)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -171,7 +177,7 @@ export default function Dashboard() {
             <nav className="space-y-2">
               
               <div className="flex items-center gap-3 px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg cursor-pointer">
-                <Link href="/home">
+                <Link href="/">
                 <Home className="w-4 h-4" />
                 <span className="text-sm">Home</span>
                 <span className="text-xs text-gray-400 ml-auto">&gt;</span>
@@ -214,11 +220,16 @@ export default function Dashboard() {
                       <CardContent className="p-0">
                         <div className="flex">
                           <div className="relative w-80 h-64">
-                            <img
-                              src={campaign.image || "/placeholder.svg"}
-                              alt={campaign.title}
-                              className="w-full h-full object-cover"
-                            />
+                            <div className="w-full h-full relative">
+                              <Image
+                                src={getImagePath(campaign.image || "/placeholder.svg")}
+                                alt={campaign.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 320px"
+                                className="object-cover"
+                                priority={false}
+                              />
+                            </div>
                             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                               {campaign.location}
                             </Badge>
@@ -300,11 +311,16 @@ export default function Dashboard() {
                             className="relative w-80 h-64 cursor-pointer hover:opacity-90 transition-opacity"
                             onClick={() => handleViewCampaign(campaign.id)}
                           >
-                            <img
-                              src={campaign.image || "/placeholder.svg"}
-                              alt={campaign.title}
-                              className="w-full h-full object-cover"
-                            />
+                            <div className="w-full h-full relative">
+                              <Image
+                                src={getImagePath(campaign.image || "/placeholder.svg")}
+                                alt={campaign.title}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 320px"
+                                className="object-cover"
+                                priority={false}
+                              />
+                            </div>
                             <Badge className="absolute top-3 left-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                               {campaign.location}
                             </Badge>

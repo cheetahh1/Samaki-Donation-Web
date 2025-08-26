@@ -6,6 +6,7 @@ import { useRef, useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Upload, X, ImageIcon } from "lucide-react"
+import Image from "next/image"
 
 interface ImageUploadProps {
   onImageUpload: (imageUrl: string | null) => void
@@ -79,11 +80,9 @@ export function ImageUpload({ onImageUpload, currentImage, className }: ImageUpl
       >
         {currentImage ? (
           <div className="relative group">
-            <img
-              src={currentImage || "/placeholder.svg"}
-              alt="Uploaded image"
-              className="w-full h-64 object-cover rounded-lg"
-            />
+            <div className="w-full h-64 relative rounded-lg overflow-hidden">
+              <Image src={currentImage || "/placeholder.svg"} alt="Uploaded image" fill className="object-cover" />
+            </div>
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
               <div className="flex gap-2">
                 <Button

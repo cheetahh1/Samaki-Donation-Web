@@ -1,13 +1,11 @@
 "use client"
 
-import { useSearchParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
+import { Suspense } from "react"
 import DonationPlatform from "@/components/ui/donation"
 
 export default function DonationPlatformPage() {
-  const searchParams = useSearchParams()
   const router = useRouter()
-  const campaignId = searchParams.get("campaignId")
-  const type = searchParams.get("type")
 
   return (
     <div className="min-h-screen">
@@ -21,7 +19,9 @@ export default function DonationPlatformPage() {
         </button>
       </div>
 
-      <DonationPlatform />
+      <Suspense fallback={<div className="p-4">Loading...</div>}>
+        <DonationPlatform />
+      </Suspense>
     </div>
   )
 }

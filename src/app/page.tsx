@@ -18,7 +18,7 @@ function Hero() {
           Together, we make change happen
         </h1>
         <p className="text-lg text-purple-600 mb-8">
-          Support Samaki's campaigns through fundraising, recruiting, giving.
+          Support Samaki&apos;s campaigns through fundraising, recruiting, giving.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/donation_cat">
@@ -55,9 +55,9 @@ function FundraisingCategories() {
         </h2>
         <Link href="/donation_cat">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          {categories.map((cat, i) => (
+          {categories.map((cat) => (
             <div
-              key={2}
+              key={cat.title}
               className="flex flex-col items-center bg-gradient-to-br from-purple-400 to-purple-500 text-white rounded-2xl py-10 px-6 shadow-md hover:shadow-lg transition"
             >
               <div className="mb-4">{cat.icon}</div>
@@ -90,11 +90,15 @@ function About() {
           <h2 className="text-4xl font-semibold text-gray-900 mb-6 leading-tight">
             Helping people <br /> Help each other
           </h2>
-          <img
-            src="/About.jpg"
-            alt="Group of people standing in a circle, symbolizing unity and support"
-            className="w-full max-w-lg h-auto rounded-lg"
-          />
+          <div className="w-full max-w-lg h-auto relative">
+            <Image
+              src="/About.jpg"
+              alt="Group of people standing in a circle, symbolizing unity and support"
+              width={1200}
+              height={800}
+              className="w-full h-auto rounded-lg"
+            />
+          </div>
           <p className="text-sm italic text-gray-500 mt-4">
             *Statistics shown are based on 2023 - 2024 GoFundMe averages*
           </p>

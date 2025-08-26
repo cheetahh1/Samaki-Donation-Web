@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { X, Users, Heart } from "lucide-react"
+import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 
 type Campaign = {
@@ -229,11 +230,9 @@ export default function DonationPlatform() {
                 <p className="text-lg text-gray-600">Help others by donating to these campaigns</p>
               </div>
               <div className="flex-1">
-                <img
-                  src="/ruralhouse.png"
-                  alt="Education campaigns"
-                  className="w-full h-64 object-cover rounded-2xl shadow-lg"
-                />
+                <div className="w-full h-64 relative rounded-2xl shadow-lg overflow-hidden">
+                  <Image src="/ruralhouse.png" alt="Education campaigns" fill className="object-cover" />
+                </div>
               </div>
             </div>
 
@@ -268,11 +267,9 @@ export default function DonationPlatform() {
                     onClick={() => handleCampaignClick(campaign)}
                   >
                     <div className="relative">
-                      <img
-                        src={campaign.image || "/placeholder.svg"}
-                        alt={campaign.title}
-                        className="w-full h-48 object-cover"
-                      />
+                      <div className="w-full h-48 relative">
+                        <Image src={campaign.image || "/placeholder.svg"} alt={campaign.title} fill className="object-cover" />
+                      </div>
                       <Badge
                         className={`absolute top-3 left-3 ${
                           campaign.category === "Medical"
@@ -316,11 +313,9 @@ export default function DonationPlatform() {
                   <h1 className="text-3xl font-bold text-gray-900 mb-6">{selectedCampaign.title}</h1>
 
                   <div className="mb-6">
-                    <img
-                      src={selectedCampaign.image || "/placeholder.svg"}
-                      alt={selectedCampaign.title}
-                      className="w-full h-64 object-cover rounded-lg shadow-lg"
-                    />
+                    <div className="w-full h-64 relative rounded-lg shadow-lg overflow-hidden">
+                      <Image src={selectedCampaign.image || "/placeholder.svg"} alt={selectedCampaign.title} fill className="object-cover" />
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-2 mb-4">
@@ -341,12 +336,9 @@ export default function DonationPlatform() {
                   {/* Additional Images */}
                   <div className="grid grid-cols-3 gap-4 mt-8">
                     {getCampaignContent(selectedCampaign).images.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image || "/placeholder.svg"}
-                        alt={`${selectedCampaign.title} - Image ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg"
-                      />
+                      <div key={index} className="w-full h-24 relative rounded-lg overflow-hidden">
+                        <Image src={image || "/placeholder.svg"} alt={`${selectedCampaign.title} - Image ${index + 1}`} fill className="object-cover" />
+                      </div>
                     ))}
                   </div>
                 </div>

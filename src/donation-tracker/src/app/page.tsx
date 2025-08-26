@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import { DM_Sans } from "next/font/google";
 
 export default function RootLayout({
   children,
@@ -7,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${dmSans.className} antialiased`}>
+      <body className={`${DM_Sans} antialiased`}>
         <Navbar />
         {children}
       </body>

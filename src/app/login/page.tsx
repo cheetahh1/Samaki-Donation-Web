@@ -13,11 +13,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 
-export default function login() {
+export default function LoginPage() {
   const router = useRouter();
 
   const handleNavigateToHome = () => {
-    router.push('/home'); // Navigates to homepage (page.tsx)
+    router.push('/'); // Navigates to homepage (page.tsx)
   };
 
   return (

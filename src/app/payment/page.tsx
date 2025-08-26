@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Approve } from "@/components/ui/successful"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function DonationPage() {
   const [donationAmount, setDonationAmount] = useState("")
@@ -142,11 +143,14 @@ export default function DonationPage() {
                         />
                         <div className="w-20 h-20 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center hover:border-purple-400 cursor-pointer overflow-hidden">
                           {profileImage ? (
-                            <img
-                              src={profileImage || "/placeholder.svg"}
-                              alt="Profile preview"
-                              className="w-full h-full object-cover"
-                            />
+                            <div className="w-full h-full relative">
+                              <Image
+                                src={profileImage || "/placeholder.svg"}
+                                alt="Profile preview"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
                           ) : (
                             <Upload className="w-6 h-6 text-gray-400" />
                           )}
@@ -208,11 +212,12 @@ export default function DonationPage() {
                             <div className="w-2 h-2 bg-white rounded-full mx-auto mt-0.5" />
                           )}
                         </div>
-                        <img
+                        <Image
                           src="/google-pay.png"
                           alt="Google Pay"
-                          className="h-6 mr-2 bg-transparent mix-blend-multiply"
-                          style={{ backgroundColor: "transparent" }}
+                          width={120}
+                          height={24}
+                          className="h-6 w-auto mr-2 bg-transparent mix-blend-multiply"
                         />
                         <span className="text-sm font-medium">Google Pay</span>
                       </label>
@@ -245,18 +250,20 @@ export default function DonationPage() {
                     className="w-full py-4 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl text-lg"
                   >
                     <span className="flex items-center justify-center gap-3">
-                      <img
+                      <Image
                         src="/google-pay.png"
                         alt="Google Pay"
-                        className="h-7 bg-transparent mix-blend-multiply"
-                        style={{ backgroundColor: "transparent" }}
+                        width={120}
+                        height={28}
+                        className="h-7 w-auto bg-transparent mix-blend-multiply"
                       />
                       <span className="text-white">|</span>
-                      <img
+                      <Image
                         src="/visa-logo.png"
                         alt="VISA"
-                        className="h-10 bg-transparent mix-blend-multiply"
-                        style={{ backgroundColor: "transparent" }}
+                        width={160}
+                        height={40}
+                        className="h-10 w-auto bg-transparent mix-blend-multiply"
                       />
                       <span className="text-white">....5 701</span>
                     </span>
