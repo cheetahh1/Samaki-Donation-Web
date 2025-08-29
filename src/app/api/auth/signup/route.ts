@@ -27,7 +27,8 @@ export async function POST(req: Request) {
     if (profileError) return NextResponse.json({ error: profileError.message }, { status: 400 })
 
     return NextResponse.json({ message: 'User created', userId })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

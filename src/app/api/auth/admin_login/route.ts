@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json({ message: 'Admin login successful', userId: data.user.id })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

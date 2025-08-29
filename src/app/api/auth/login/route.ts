@@ -10,7 +10,8 @@ export async function POST(req: Request) {
     if (error || !data.user) return NextResponse.json({ error: error?.message || 'Login failed' }, { status: 400 })
 
     return NextResponse.json({ message: 'Login successful', userId: data.user.id })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }
