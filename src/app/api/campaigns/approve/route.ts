@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseServer } from '@utils/supabase/server'
-import { requireAdminById } from '@utils/supabase/middleware'
+import { supabaseServer } from '../../../../../utils/supabase/server'
 
 export async function POST(req: Request) {
   try {
@@ -8,10 +7,16 @@ export async function POST(req: Request) {
     if (!campaignId || !adminUserId) 
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
 
-    // Check admin
-    const admin = await requireAdminById(adminUserId)
-    if (!admin) 
+    // Check if user is admin
+    const { data: adminProfile, error: adminError } = await supabaseServer
+      .from('profiles')
+      .select('role')
+      .eq('id', adminUserId)
+      .single()
+
+    if (adminError || adminProfile?.role !== 'admin') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     // Update campaign and return updated row
     const { data, error } = await supabaseServer

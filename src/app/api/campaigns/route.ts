@@ -1,6 +1,6 @@
+// /app/api/campaigns/route.ts
 import { NextResponse } from 'next/server'
-import { supabaseServer } from '@utils/supabase/server'
-import { requireAuthById } from '@utils/supabase/middleware'
+import { supabaseServer } from '../../../../utils/supabase/server'
 
 // ========================
 // GET /api/campaigns
@@ -10,7 +10,8 @@ export async function GET() {
   try {
     const { data: campaigns, error } = await supabaseServer
       .from('campaigns')
-      .select('*') // removed .order()
+      .select('*')
+      .order('created_at', { ascending: false }) // latest first
 
     if (error) return NextResponse.json({ error: error.message }, { status: 400 })
 
@@ -23,19 +24,26 @@ export async function GET() {
 
 // ========================
 // POST /api/campaigns
-// Create a new campaign
+// Create a new campaign (optional, used for fundraising form)
 // ========================
 export async function POST(req: Request) {
   try {
-    const { title, description, goalAmount, userId } = await req.json()
+    const { title, description, goalAmount, userId, category, imageUrl } = await req.json()
 
     if (!title || !goalAmount || !userId) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
-    // Optional: verify user exists
-    const user = await requireAuthById(userId)
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // Verify user exists
+    const { data: user, error: userError } = await supabaseServer
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single()
+    
+    if (userError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     const { data, error } = await supabaseServer
       .from('campaigns')
@@ -43,9 +51,11 @@ export async function POST(req: Request) {
         title,
         description,
         goal_amount: goalAmount,
+        current_amount: 0,
         created_by: userId,
-        status: 'pending', // default
-        current_amount: 0
+        category: category || 'Well-being',
+        status: 'pending',
+        image_url: imageUrl || null,
       })
       .select()
 

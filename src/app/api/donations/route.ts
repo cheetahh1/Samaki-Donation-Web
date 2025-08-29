@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseServer } from '@utils/supabase/server'
-import { requireAuthById } from '@utils/supabase/middleware'
+import { supabaseServer } from '../../../../utils/supabase/server'
 
 export async function GET(req: Request) {
   try {
@@ -37,8 +36,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
 
     // Verify user exists
-    const user = await requireAuthById(userId)
-    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { data: user, error: userError } = await supabaseServer
+      .from('profiles')
+      .select('id')
+      .eq('id', userId)
+      .single()
+    
+    if (userError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
     // Insert donation
     const { data: donation, error: donationError } = await supabaseServer
