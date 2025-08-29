@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
         body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Admin login failed')
+      if (!res.ok) throw new Error(data.error || 'Admin login failed')
       router.push('/dashboard')
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'

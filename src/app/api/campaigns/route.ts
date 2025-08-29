@@ -28,9 +28,9 @@ export async function GET() {
 // ========================
 export async function POST(req: Request) {
   try {
-    const { title, description, goalAmount, userId, category, imageUrl } = await req.json()
+    const { title, description, goalAmount, userId, category, imageUrl, location } = await req.json()
 
-    if (!title || !goalAmount || !userId) {
+    if (!title || !goalAmount || !description) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
@@ -50,12 +50,11 @@ export async function POST(req: Request) {
       .insert({
         title,
         description,
-        goal_amount: goalAmount,
-        current_amount: 0,
-        created_by: userId,
+        goal: goalAmount, // matches actual column name
+        raised: 0, // matches actual column name
         category: category || 'Well-being',
-        status: 'pending',
         image_url: imageUrl || null,
+        location: location || 'Cambodia',
       })
       .select()
 

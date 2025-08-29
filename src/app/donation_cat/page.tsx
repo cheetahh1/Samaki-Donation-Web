@@ -47,8 +47,27 @@ export default function DonationPlatform() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [liveCampaigns, setLiveCampaigns] = useState<Campaign[]>([])
   const [loading, setLoading] = useState(true)
+  const [donationAmount, setDonationAmount] = useState("")
+  const [donating, setDonating] = useState(false)
 
   const categories = ["all", "Medical", "Education", "Well-being"]
+
+  // Handle donation
+  const handleDonation = async () => {
+    if (!donationAmount || !selectedCampaign) return
+    
+    setDonating(true)
+    try {
+      // For now, just show success message
+      // In the future, connect to real donation API
+      alert(`Thank you for your $${donationAmount} donation to ${selectedCampaign.title}!`)
+      setDonationAmount("")
+    } catch (error) {
+      alert("Donation failed. Please try again.")
+    } finally {
+      setDonating(false)
+    }
+  }
 
   // Fetch campaigns from Supabase
   useEffect(() => {
@@ -58,16 +77,16 @@ export default function DonationPlatform() {
         const data = await res.json()
 
         if (data.campaigns) {
-          const mapped = data.campaigns.map((c: { id: string; title: string; description: string; category?: string; image_url?: string; current_amount?: number; goal_amount?: number; location?: string }) => ({
+          const mapped = data.campaigns.map((c: { id: string; title: string; description: string; category?: string; image_url?: string; raised?: number; goal?: number; location?: string }) => ({
             id: c.id,
             title: c.title,
             description: c.description,
             category: c.category || "Well-being",
             image: c.image_url || "/placeholder.svg",
-            raised: c.current_amount || 0,
-            goal: c.goal_amount || 0,
-            fundedPercentage: c.goal_amount && c.current_amount
-              ? Math.round((c.current_amount / c.goal_amount) * 100)
+            raised: c.raised || 0,
+            goal: c.goal || 0,
+            fundedPercentage: c.goal && c.raised
+              ? Math.round((c.raised / c.goal) * 100)
               : 0,
             location: c.location || "",
           }))
@@ -100,10 +119,22 @@ export default function DonationPlatform() {
   }
 
   const getCampaignContent = (campaign: Campaign) => {
-    // Optional: add more images per campaign if needed
+    // Use different placeholder images for variety
+    const placeholderImages = [
+      "/ruralhouse.png",
+      "/schooljpg.jpg", 
+      "/hospitaljpg.jpg",
+      "/kidschool.jpg",
+      "/water-rural.jpg"
+    ]
+    
     return {
       fullDescription: campaign.description,
-      images: [campaign.image, campaign.image, campaign.image],
+      images: [
+        campaign.image || placeholderImages[0],
+        placeholderImages[1] || "/ruralhouse.png",
+        placeholderImages[2] || "/schooljpg.jpg"
+      ],
     }
   }
 
@@ -227,6 +258,7 @@ export default function DonationPlatform() {
                       alt={selectedCampaign.title}
                       fill
                       className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
 
@@ -268,8 +300,28 @@ export default function DonationPlatform() {
                       <div className="text-2xl font-bold mb-1">${selectedCampaign.raised} USD raised</div>
                       <div className="text-purple-200 text-sm mb-4">Goal: ${selectedCampaign.goal}</div>
                       <Progress value={selectedCampaign.fundedPercentage} className="h-2 mb-4 bg-purple-500" />
-                      <Button asChild className="w-full bg-white text-purple-600 hover:bg-gray-100 font-semibold">
-                        <Link href="/payment">Donate now</Link>
+                      
+                      {/* Donation Input */}
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-purple-100 mb-2">
+                          Donation Amount (USD)
+                        </label>
+                        <input
+                          type="number"
+                          value={donationAmount}
+                          onChange={(e) => setDonationAmount(e.target.value)}
+                          placeholder="Enter amount"
+                          className="w-full px-3 py-2 rounded-md text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                          min="1"
+                        />
+                      </div>
+                      
+                      <Button 
+                        onClick={handleDonation}
+                        disabled={!donationAmount || donating}
+                        className="w-full bg-white text-purple-600 hover:bg-gray-100 font-semibold disabled:opacity-50"
+                      >
+                        {donating ? "Processing..." : "Donate Now"}
                       </Button>
                     </div>
                   </Card>

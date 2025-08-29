@@ -24,7 +24,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Login failed')
+      if (!res.ok) throw new Error(data.error || 'Login failed')
       router.push('/') // general user homepage
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'

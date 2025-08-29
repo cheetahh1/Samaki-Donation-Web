@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '../../../../../utils/supabase/client'
+import { supabaseServer } from '../../../../../utils/supabase/server'
 
 export async function POST(req: Request) {
   try {
@@ -8,12 +8,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 })
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    // Use server-side supabase for authentication
+    const { data, error } = await supabaseServer.auth.signInWithPassword({ email, password })
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
-    const { data: profile, error: profileError } = await supabase
+    // Use server-side supabase for profile lookup
+    const { data: profile, error: profileError } = await supabaseServer
       .from('profiles')
       .select('*')
       .eq('id', data.user.id)

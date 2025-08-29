@@ -1,21 +1,19 @@
 import { NextResponse } from 'next/server'
-import { supabaseServer } from '@utils/supabase/server'
-import { requireAuthById } from '@utils/supabase/middleware'
+import { supabaseServer } from '../../../../utils/supabase/server'
 
 export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get('userId')
-  if (!userId) return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
+  try {
+    const { data: profiles, error } = await supabaseServer
+      .from('profiles')
+      .select('*')
 
-  const user = await requireAuthById(userId)
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
 
-  const { data: profile, error } = await supabaseServer
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 })
-  return NextResponse.json({ profile })
+    return NextResponse.json({ profiles })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred'
+    return NextResponse.json({ error: errorMessage }, { status: 500 })
+  }
 }
